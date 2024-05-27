@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnw0ksu5reapf"]
+
+[ext_resource type="Script" path="res://scripts/swordFlameArea.gd" id="1_2to25"]
+[ext_resource type="Texture2D" uid="uid://dr5hi1o7jxtg7" path="res://sprites/flameSword.png" id="2_ykqqn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6wkft"]
+size = Vector2(18, 9)
+
+[node name="swordFlameArea" type="Area2D"]
+top_level = true
+script = ExtResource("1_2to25")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_6wkft")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ykqqn")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0, -0.5)
+scale = Vector2(0.2, 0.15)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

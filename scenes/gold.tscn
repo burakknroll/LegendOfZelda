@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://d27uhbb03f8be"]
+
+[ext_resource type="Texture2D" uid="uid://de37kymbdbiw" path="res://sprites/gold.png" id="1_od0ai"]
+[ext_resource type="Script" path="res://scripts/gold.gd" id="1_p1h5b"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bikeb"]
+radius = 8.06226
+
+[node name="gold" type="Area2D"]
+script = ExtResource("1_p1h5b")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_od0ai")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_bikeb")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

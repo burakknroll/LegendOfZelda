@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3cduwy035hta"]
+
+[ext_resource type="Script" path="res://scripts/goldDropComponent.gd" id="1_0tu7l"]
+
+[node name="goldDropComponent" type="Node"]
+script = ExtResource("1_0tu7l")
+dropPercent = 1.0

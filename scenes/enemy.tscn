@@ -1,0 +1,169 @@
+[gd_scene load_steps=20 format=3 uid="uid://c7yyyjfwvqvr"]
+
+[ext_resource type="Script" path="res://scripts/Enemy.gd" id="1_55qfe"]
+[ext_resource type="Texture2D" uid="uid://cx4ihyccaa08q" path="res://sprites/enemy.png" id="2_3cusd"]
+[ext_resource type="PackedScene" uid="uid://b0s3xj043otoc" path="res://scenes/healthComponent.tscn" id="3_ambxa"]
+[ext_resource type="PackedScene" uid="uid://cywr0wdgqinkk" path="res://scenes/dropComponent.tscn" id="4_3b5pf"]
+[ext_resource type="PackedScene" uid="uid://d3cduwy035hta" path="res://scenes/goldDropComponent.tscn" id="6_1q152"]
+[ext_resource type="PackedScene" uid="uid://d27uhbb03f8be" path="res://scenes/gold.tscn" id="7_ss04i"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5is56"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ra3ef"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xcxe"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ojhc"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qhb51"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3olo6"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gpyrm"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ja5pg"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xjvcd"]
+atlas = ExtResource("2_3cusd")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rkgiq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5is56")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ra3ef")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xcxe")
+}],
+"loop": true,
+"name": &"walkDown",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ojhc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qhb51")
+}],
+"loop": true,
+"name": &"walkLeft",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3olo6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gpyrm")
+}],
+"loop": true,
+"name": &"walkRight",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ja5pg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xjvcd")
+}],
+"loop": true,
+"name": &"walkUp",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iccno"]
+size = Vector2(16, 8)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7cgrp"]
+radius = 40.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tqe3v"]
+size = Vector2(12, 10)
+
+[node name="Enemy" type="CharacterBody2D" node_paths=PackedStringArray("nav", "rcArray") groups=["enemy"]]
+position = Vector2(88, 136)
+motion_mode = 1
+script = ExtResource("1_55qfe")
+nav = NodePath("NavigationAgent2D")
+maxX = 320.0
+minX = -320.0
+maxY = 267.0
+minY = -267.0
+rcArray = [NodePath("RCDown"), NodePath("RCLeft"), NodePath("RCRight"), NodePath("RCUp")]
+metadata/_edit_group_ = true
+
+[node name="AniSprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_rkgiq")
+animation = &"walkUp"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_postprocessing = 1
+debug_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_iccno")
+
+[node name="SeeArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeeArea"]
+shape = SubResource("CircleShape2D_7cgrp")
+debug_color = Color(1, 0, 0.152941, 0.419608)
+
+[node name="enemyArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="enemyArea"]
+shape = SubResource("RectangleShape2D_tqe3v")
+debug_color = Color(0.0862745, 0.647059, 0, 0.419608)
+
+[node name="RCDown" type="RayCast2D" parent="."]
+target_position = Vector2(0, 24)
+
+[node name="RCLeft" type="RayCast2D" parent="."]
+target_position = Vector2(-24, 0)
+
+[node name="RCRight" type="RayCast2D" parent="."]
+target_position = Vector2(24, 0)
+
+[node name="RCUp" type="RayCast2D" parent="."]
+target_position = Vector2(0, -24)
+
+[node name="HealthComponent" parent="." instance=ExtResource("3_ambxa")]
+
+[node name="dropComponent" parent="." node_paths=PackedStringArray("healthComponent") instance=ExtResource("4_3b5pf")]
+dropPercent = 1.0
+healthComponent = NodePath("../HealthComponent")
+
+[node name="goldDropComponent" parent="." node_paths=PackedStringArray("healthComponent") instance=ExtResource("6_1q152")]
+goldScene = ExtResource("7_ss04i")
+healthComponent = NodePath("../HealthComponent")
+
+[connection signal="body_entered" from="SeeArea" to="." method="_on_see_area_body_entered"]
+[connection signal="body_exited" from="SeeArea" to="." method="_on_see_area_body_exited"]

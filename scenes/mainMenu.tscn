@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://bj6mka06s75e3"]
+
+[ext_resource type="Texture2D" uid="uid://cexp6eotwtcwq" path="res://sprites/buttons1.png" id="1_2c2x2"]
+[ext_resource type="Script" path="res://scripts/mainMenu.gd" id="1_scu7n"]
+[ext_resource type="Texture2D" uid="uid://bcovt100yykm5" path="res://sprites/buttons3.png" id="2_jiekm"]
+[ext_resource type="Texture2D" uid="uid://datqn5j01jmwv" path="res://sprites/buttons2.png" id="3_lqmfk"]
+[ext_resource type="Texture2D" uid="uid://b57lff4vy8g68" path="res://sprites/buttons4.png" id="4_2whwx"]
+
+[node name="mainMenu" type="Node2D"]
+script = ExtResource("1_scu7n")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 256.0
+offset_bottom = 208.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayButton" type="TextureButton" parent="."]
+offset_left = 96.0
+offset_top = 88.0
+offset_right = 160.0
+offset_bottom = 112.0
+texture_normal = ExtResource("1_2c2x2")
+texture_pressed = ExtResource("2_jiekm")
+texture_hover = ExtResource("3_lqmfk")
+texture_disabled = ExtResource("4_2whwx")
+
+[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]

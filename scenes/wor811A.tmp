@@ -1,0 +1,276 @@
+[gd_scene load_steps=28 format=3 uid="uid://bi73lb33xddlh"]
+
+[ext_resource type="Script" path="res://scripts/Camera2D.gd" id="1_8r66s"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_msyd8"]
+[ext_resource type="Texture2D" uid="uid://d1blwi7jhlibc" path="res://sprites/dungeon.png" id="1_rio55"]
+[ext_resource type="PackedScene" uid="uid://xggjpn5fg30q" path="res://scenes/player.tscn" id="2_rrg1x"]
+[ext_resource type="Texture2D" uid="uid://bnlhs5gqslnf0" path="res://sprites/spike.png" id="6_temgf"]
+[ext_resource type="Script" path="res://scripts/Spike.gd" id="6_w0o0b"]
+[ext_resource type="PackedScene" uid="uid://b5xfk7j6qoaw0" path="res://scenes/heart.tscn" id="7_xec82"]
+[ext_resource type="PackedScene" uid="uid://c7yyyjfwvqvr" path="res://scenes/enemy.tscn" id="9_7fwm3"]
+[ext_resource type="Texture2D" uid="uid://dw3375bkmjycr" path="res://sprites/sword.png" id="9_fgh8q"]
+[ext_resource type="Script" path="res://scripts/swordPickUp.gd" id="9_timy7"]
+[ext_resource type="Texture2D" uid="uid://0vpdhb3xlm6h" path="res://sprites/NPC.png" id="11_0wk7d"]
+[ext_resource type="Script" path="res://scripts/playerDetector.gd" id="12_dqs84"]
+[ext_resource type="FontFile" uid="uid://cyjcgqj33s6nv" path="res://fonts/the-legend-of-zelda-nes.ttf" id="13_kvv6o"]
+[ext_resource type="Texture2D" uid="uid://dr5hi1o7jxtg7" path="res://sprites/flameSword.png" id="14_re6k1"]
+[ext_resource type="Texture2D" uid="uid://de37kymbdbiw" path="res://sprites/gold.png" id="15_k252c"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fuqv5"]
+atlas = ExtResource("11_0wk7d")
+region = Rect2(0, 0, 18, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4cx3x"]
+atlas = ExtResource("11_0wk7d")
+region = Rect2(18, 0, 18, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_e2sq1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fuqv5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4cx3x")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g2xpi"]
+size = Vector2(16, 16)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_ey8ty"]
+vertices = PackedVector2Array(214, 166, 42, 166, 42, 74, 214, 74)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(32, 64, 224, 64, 224, 176, 32, 176)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_48t5e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uyave"]
+
+[sub_resource type="Animation" id="Animation_n443j"]
+resource_name = "idle"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.1, 1.1), Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_oybjo"]
+resource_name = "lost"
+length = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1.1, 1.1), Vector2(0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_e46gg"]
+_data = {
+"idle": SubResource("Animation_n443j"),
+"lost": SubResource("Animation_oybjo")
+}
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ba4vn"]
+bg_color = Color(0, 0, 0, 0.619608)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_47uro"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[node name="World" type="Node2D"]
+position = Vector2(256, 0)
+script = ExtResource("1_msyd8")
+
+[node name="Cave" type="Sprite2D" parent="."]
+modulate = Color(0.352941, 0.352941, 0.352941, 1)
+position = Vector2(-128, 120)
+texture = ExtResource("1_rio55")
+
+[node name="Merchant" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.572549, 0.572549, 0.572549, 1)
+position = Vector2(-128, 88)
+sprite_frames = SubResource("SpriteFrames_e2sq1")
+animation = &"idle"
+autoplay = "idle"
+frame_progress = 0.184271
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("player")]
+anchor_mode = 0
+script = ExtResource("1_8r66s")
+player = NodePath("../Player")
+
+[node name="Dungeon" type="Sprite2D" parent="."]
+position = Vector2(128, 120)
+texture = ExtResource("1_rio55")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Dungeon"]
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="Dungeon"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Dungeon/StaticBody2D2"]
+polygon = PackedVector2Array(-96, -56, -128, -88, 128, -88, 96, -56)
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="Dungeon"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Dungeon/StaticBody2D3"]
+polygon = PackedVector2Array(96, -56, 128, -88, 128, 88, 96, 56, 96, 8, 112, 16, 112, -16, 96, -8)
+
+[node name="StaticBody2D4" type="StaticBody2D" parent="Dungeon"]
+
+[node name="Spike" type="Area2D" parent="."]
+script = ExtResource("6_w0o0b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spike"]
+position = Vector2(72, 120)
+shape = SubResource("RectangleShape2D_g2xpi")
+
+[node name="Sprite2D" type="Sprite2D" parent="Spike"]
+position = Vector2(72, 120)
+texture = ExtResource("6_temgf")
+
+[node name="Heart" parent="." instance=ExtResource("7_xec82")]
+position = Vector2(184, 88)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_ey8ty")
+
+[node name="Enemy" parent="." node_paths=PackedStringArray("rcArray") instance=ExtResource("9_7fwm3")]
+rcArray = [null, null, null, null]
+
+[node name="Player" parent="." instance=ExtResource("2_rrg1x")]
+position = Vector2(176, 112)
+speed = 66
+
+[node name="swordPickUp" type="Area2D" parent="."]
+position = Vector2(144, 80)
+script = ExtResource("9_timy7")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="swordPickUp"]
+shape = SubResource("RectangleShape2D_48t5e")
+
+[node name="Sprite2D" type="Sprite2D" parent="swordPickUp"]
+texture = ExtResource("9_fgh8q")
+
+[node name="EntitiesLayer" type="Node2D" parent="." groups=["EntitiesLayer"]]
+
+[node name="playerDetector" type="Area2D" parent="."]
+position = Vector2(-128, 104)
+script = ExtResource("12_dqs84")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="playerDetector"]
+shape = SubResource("RectangleShape2D_uyave")
+
+[node name="IndicatorLabel" type="Label" parent="."]
+visible = false
+offset_left = -136.0
+offset_top = 56.0
+offset_right = -126.0
+offset_bottom = 80.0
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(8, 12)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("13_kvv6o")
+text = "e"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="IndicatorLabel"]
+libraries = {
+"": SubResource("AnimationLibrary_e46gg")
+}
+
+[node name="ShopPopUP" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="Panel" parent="ShopPopUP"]
+visible = false
+offset_left = 24.0
+offset_top = 40.0
+offset_right = 232.0
+offset_bottom = 176.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ba4vn")
+
+[node name="swordPanel" type="Panel" parent="ShopPopUP/Panel"]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 80.0
+offset_bottom = 120.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_47uro")
+
+[node name="buyButton" type="Button" parent="ShopPopUP/Panel/swordPanel"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 80.0
+offset_right = 104.0
+offset_bottom = 111.0
+scale = Vector2(0.5, 0.5)
+text = "BUY"
+
+[node name="flameSword" type="Sprite2D" parent="ShopPopUP/Panel/swordPanel"]
+position = Vector2(32, 48)
+rotation = -1.5708
+scale = Vector2(3, 3)
+texture = ExtResource("14_re6k1")
+
+[node name="lblExp" type="Label" parent="ShopPopUP/Panel/swordPanel"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 8.0
+offset_right = 120.0
+offset_bottom = 31.0
+scale = Vector2(0.4, 0.4)
+theme_override_fonts/font = ExtResource("13_kvv6o")
+text = "This sword deal
+fire damage!"
+
+[node name="coast" type="Label" parent="ShopPopUP/Panel/swordPanel"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 40.0
+offset_right = 224.0
+offset_bottom = 56.0
+scale = Vector2(0.4, 0.4)
+theme_override_fonts/font = ExtResource("13_kvv6o")
+text = "x10 GOLD"
+
+[node name="goldSprite" type="Sprite2D" parent="ShopPopUP/Panel/swordPanel"]
+position = Vector2(88, 43)
+texture = ExtResource("15_k252c")
+
+[connection signal="body_entered" from="Spike" to="Spike" method="_on_body_entered"]
+[connection signal="body_entered" from="swordPickUp" to="swordPickUp" method="_on_body_entered"]
+[connection signal="body_entered" from="playerDetector" to="playerDetector" method="_on_body_entered"]
+[connection signal="body_exited" from="playerDetector" to="playerDetector" method="_on_body_exited"]
